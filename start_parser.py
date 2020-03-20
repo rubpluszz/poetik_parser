@@ -1,4 +1,4 @@
-#!/usr/bin/env pytho
+#!~/projects/telegram_bot_one/botworkspace/bin/python3
 # -*- coding: utf-8 -*-
 import dash
 import dash_core_components as dcc
@@ -6,7 +6,8 @@ import dash_html_components as html
 from parsers import ParsersForRyhmes
 
 class VisualForDash():
-    
+
+    """ A class for managing the display of graphical information."""
     external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
     app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -15,22 +16,20 @@ class VisualForDash():
                 'background': '#111111',
                 'text': '#7FDBFF'
              }
-         
+
     app.layout = html.Div(
                             [
                                 html.Div(
-                                            style={'backgroundColor': colors['background']}, 
+                                            style={'backgroundColor': colors['background']},
                                             children=html.H1(
                                                                 id='header',
-                                                                children='Римо Парсер',
+                                                                children='Parser Rhyme',
                                                                 style={
                                                                         'textAlign': 'center',
                                                                         'color': colors['text']
                                                                       }
                                                                 )
                                         ),
-                                        
-                                html.Label(id='language', children='Мова', ),
                                 dcc.Dropdown(
                                                 options=[
                                                             {'label': 'English', 'value': 'en'},
@@ -50,7 +49,7 @@ class VisualForDash():
                             ]
                         )
     language = 'en'
-    
+
     @app.callback(dash.dependencies.Output('button', 'children'),
         [dash.dependencies.Input('my_dropbox', 'value')])
     def update_output_buton(value):#Змінює текст на кнопці'
@@ -63,7 +62,7 @@ class VisualForDash():
             return ('поиск')
         if vdb.language == 'pl':
             return ('szukaj')
-            
+
     @app.callback(dash.dependencies.Output('label-input', 'children'),
         [dash.dependencies.Input('my_dropbox', 'value')])
     def update_output_input_label(value):#Змінює текст id=label-input'
@@ -76,21 +75,9 @@ class VisualForDash():
             return ('Введи слово и нажми поиск')
         if vdb.language == 'pl':
             return ('Wpisz słowo i kliknij szukaj')
-             
-    @app.callback(dash.dependencies.Output('language', 'children'),
-                 [dash.dependencies.Input('my_dropbox', 'value')])
-    def update_output_language(value):#Присвоює змінній language відповідне значення де value значення дропбокса змынює мову елемента id='language'
-        vdb=VisualForDash
-        vdb.language=value
-        if vdb.language == 'en':
-            return ('Language')
-        if vdb.language == 'ua':
-            return ('Мова')
-        if vdb.language == 'ru':
-            return ('Язык')
-        if vdb.language == 'pl':
-            return ('Jezyk')                   
-                
+
+
+
     @app.callback(dash.dependencies.Output('header', 'children'),
         [dash.dependencies.Input('my_dropbox', 'value')])
     def update_output_header(value):#Зміна виводу заголовку
@@ -104,12 +91,11 @@ class VisualForDash():
             return ('Парсер Рифм')
         if vdb.language == 'pl':
             return ('Parser Rym')
-                    
+
     @app.callback(dash.dependencies.Output('input-box', 'value'),
          [dash.dependencies.Input('my_dropbox', 'value')])
     def update_output_input(value):#Зміна початкового напису в Input в залежності від вибраної мови
         vdb=VisualForDash
-        vdb.language=value
         if vdb.language == 'en':
             return ('rhyme')
         if vdb.language == 'ua':
@@ -118,23 +104,23 @@ class VisualForDash():
             return ('рифма')
         if vdb.language == 'pl':
             return ('ryma')
-                    
+
     @app.callback(dash.dependencies.Output('result', 'children'),
                  [dash.dependencies.Input('button', 'n_clicks')],
                  [dash.dependencies.State('input-box', 'value')])
     def update_output_result(n_clicks, value):#Запускає відповідний парсер і передає йому введене користувачем слово, повертає масив повернений парсером для виводу в result.
         vdb=VisualForDash
         print(vdb.language)
-        
-        if vdb.language=='uk':
-            return (ParsersForRyhmes.selenium_parser_uk(value))
+        parser = ParsersForRyhmes(value)
+        if vdb.language=='ua':
+            return (parser.selenium_parser_uk())
         if vdb.language=='en':
-            return (ParsersForRyhmes.selenium_parser_en(value))
+            return (parser.selenium_parser_en())
         if vdb.language=='ru':
-            return (ParsersForRyhmes.selenium_parser_ru(value))
+            return (parser.selenium_parser_ru())
         if vdb.language=='pl':
-            return (ParsersForRyhmes.selenium_parser_pl(value))
- 
-    
+            return (parser.selenium_parser_pl())
+
+
 if __name__ == '__main__':
     VisualForDash.app.run_server(debug=True)
