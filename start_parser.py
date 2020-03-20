@@ -1,4 +1,4 @@
-#!~/projects/telegram_bot_one/botworkspace/bin/python3
+#!/bin/python3
 # -*- coding: utf-8 -*-
 import dash
 import dash_core_components as dcc
