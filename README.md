@@ -6,7 +6,7 @@ $pip install selenium==3.14.0
 
 and PlotlyDash for python 3(https://dash.plot.ly)
 
-variants installation:
+variants installation PlotlyDash:
 
 pip install dash==1.6.1
 
